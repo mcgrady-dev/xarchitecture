@@ -1,8 +1,10 @@
 package com.mcgrady.xarchitecture.ext
 
 import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -57,3 +59,7 @@ inline fun <reified T : ViewDataBinding> RecyclerView.ViewHolder.databind() =
 
 inline fun <reified T : ViewDataBinding> RecyclerView.ViewHolder.databind(noinline block: (T.() -> Unit)) =
     ViewHolderDataBinding(T::class.java, block)
+
+inline fun Context.toast(duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, "TestToast", duration).show()
+}

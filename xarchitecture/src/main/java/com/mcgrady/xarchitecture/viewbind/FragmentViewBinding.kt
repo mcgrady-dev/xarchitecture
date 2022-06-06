@@ -18,6 +18,7 @@ class FragmentViewBinding<T : ViewBinding>(
     private val layoutInflater = bindingClass.inflateMethod()
     private val bindView = bindingClass.bindMethod()
 
+    @Suppress("UNCHECKED_CAST")
     override fun getValue(thisRef: Fragment, property: KProperty<*>): T {
         return binding?.run {
             return this

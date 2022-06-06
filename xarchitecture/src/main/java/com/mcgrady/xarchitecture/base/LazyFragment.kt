@@ -5,11 +5,12 @@ import androidx.fragment.app.Fragment
 /**
  * Created by mcgrady on 2021/5/13.
  */
-abstract class BaseFragment : Fragment() {
+abstract class LazyFragment : Fragment() {
 
-    private var isLoaded = false
+    protected var isLoaded = false
 
     override fun onResume() {
+
         super.onResume()
         if (!isLoaded && !isHidden) {
             lazyInit()

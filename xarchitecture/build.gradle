@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'com.vanniktech.maven.publish'
 }
 
 android {
@@ -58,6 +59,12 @@ dependencies {
     // coroutines
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1"
+}
 
-    api 'com.gitee.zackratos:UltimateBarX:0.7.1'
+allprojects {
+    plugins.withId("com.vanniktech.maven.publish") {
+        mavenPublish {
+            sonatypeHost = "S01"
+        }
+    }
 }

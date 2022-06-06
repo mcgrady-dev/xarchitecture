@@ -1,4 +1,4 @@
-package com.mcgrady.xarchitecture
+package com.mcgrady.xarchitecturedemo
 
 import org.junit.Test
 

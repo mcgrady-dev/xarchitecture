@@ -25,6 +25,7 @@ class ViewGroupViewBinding<T : ViewBinding>(
         classes.inflateMethod()
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun getValue(thisRef: ViewGroup, property: KProperty<*>): T {
         return binding?.run {
             this

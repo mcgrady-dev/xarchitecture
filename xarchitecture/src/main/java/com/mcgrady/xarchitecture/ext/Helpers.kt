@@ -13,9 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.lifecycle
+package com.mcgrady.xarchitecture.ext
 
 /**
- * Created by mcgrady on 2021/7/19.
+ * Created by mcgrady on 2022/5/31.
  */
-open class BindingLifecycleObserver : DefaultLifecycleObserver
+
+enum class ScreenSize {
+    SMALL,
+    NORMAL,
+    LARGE,
+    XLARGE
+}
+
+enum class Orientation {
+    PORTRAIT,
+    LANDSCAPE,
+    SQUARE
+}
+
+enum class UiMode {
+    NORMAL,
+    CAR,
+    DESK,
+    TELEVISION,
+    APPLIANCE,
+    WATCH
+}

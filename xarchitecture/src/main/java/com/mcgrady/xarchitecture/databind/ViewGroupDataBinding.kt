@@ -13,43 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mcgrady.xarchitecture.viewbind
+package com.mcgrady.xarchitecture.databind
 
 import android.app.Activity
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.activity.ComponentActivity
+import androidx.annotation.LayoutRes
+import androidx.databinding.DataBindingUtil
 import androidx.viewbinding.ViewBinding
 import com.mcgrady.xarchitecture.ext.addLifecycleFragment
-import com.mcgrady.xarchitecture.ext.inflateMethod
-import com.mcgrady.xarchitecture.ext.inflateMethodWithViewGroup
 import com.mcgrady.xarchitecture.ext.observerWhenDestroyed
-import java.lang.reflect.Method
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
- * Created by mcgrady on 2021/12/28.
+ * Created by mcgrady on 2022/5/31.
  */
-class ViewGroupViewBinding<T : ViewBinding>(
-    bindingClass: Class<T>,
-    private val inflater: LayoutInflater,
-    private val viewGroup: ViewGroup? = null
+class ViewGroupDataBinding<T : ViewBinding>(
+    @Suppress("UNUSED_PARAMETER") bindingClass: Class<T>,
+    @LayoutRes val resId: Int,
+    val inflater: LayoutInflater,
+    val viewGroup: ViewGroup? = null,
+    private var block: (T.() -> Unit)? = null
 ) : ReadOnlyProperty<ViewGroup, T> {
 
-    private var binding: T? = null
-    private var layoutInflater: Method = if (viewGroup != null) {
-        bindingClass.inflateMethodWithViewGroup()
-    } else {
-        bindingClass.inflateMethod()
-    }
+    private var viewBinding: T? = null
 
     init {
         viewGroup?.apply {
             when (context) {
                 is ComponentActivity -> {
-                    (context as ComponentActivity).lifecycle.observerWhenDestroyed { destroyed() }
+                    (context as ComponentActivity?)?.lifecycle?.observerWhenDestroyed { destroyed() }
                 }
                 is Activity -> {
                     val activity = context as Activity
@@ -64,26 +60,20 @@ class ViewGroupViewBinding<T : ViewBinding>(
     }
 
     override fun getValue(thisRef: ViewGroup, property: KProperty<*>): T {
-        return binding?.run {
+        return viewBinding?.run {
             this
         } ?: let {
-            @Suppress("UNCHECKED_CAST")
-            val bind: T = viewGroup?.let {
-                layoutInflater.invoke(null, inflater, viewGroup) as T
-            } ?: let {
-                layoutInflater.invoke(null, inflater) as T
-            }
-
+            val bind = DataBindingUtil.inflate(inflater, resId, thisRef, true) as T
+            val value = block
             bind.apply {
-                if (viewGroup == null) {
-                    thisRef.addView(bind.root)
-                }
-                binding = this
+                viewBinding = this
+                value?.invoke(this)
+                block = null
             }
         }
     }
 
     private fun destroyed() {
-        binding = null
+        viewBinding = null
     }
 }

@@ -1,0 +1,77 @@
+apply plugin: 'com.diffplug.spotless'
+
+spotless {
+    // optional: limit format enforcement to just the files changed by this feature branch
+    //ratchetFrom 'origin/develop'
+
+    format 'misc', {
+        // define the files to apply `misc` to
+        target '*.gradle', '*.md', '.gitignore'
+
+        // define the steps to apply to those files
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
+
+    java {
+        target '**/*.java'
+
+        importOrder()
+        removeUnusedImports()
+        googleJavaFormat('1.8').aosp().reflowLongStrings()
+
+        trimTrailingWhitespace()
+        endWithNewline()
+        licenseHeaderFile "$rootDir/license.kt"
+    }
+
+    kotlin {
+        target "**/*.kt"
+        ktlint("0.45.2")
+                .userData([
+                        'disabled_rules': 'no-wildcard-imports'
+                ])
+        licenseHeaderFile "$rootDir/license.kt"
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+    }
+}
+
+task spotlessPreCommitHook() {
+    def gitHooksDirectory = new File("$project.rootDir/.git/hooks/")
+    if (!gitHooksDirectory.exists()) gitHooksDirectory.mkdirs()
+    new File("$project.rootDir/.git/hooks", "pre-commit").text = """
+#!/bin/bash
+echo "Running spotless apply"
+set -e
+  ./gradlew -PdisableSpotlessCheck spotlessApply
+result=\$?
+printf "The spotless apply result code is \$result"
+if [[ "\$result" = 0 ]] ; then
+    echo "\\033[32m
+    ....
+    ....
+    SpotlessApply Pass!!
+    ....
+    ....
+    \\033[0m"
+    exit 0
+else
+    ./gradlew format
+    echo "\\033[31m
+    ....
+    ....
+    SpotlessApply Failed!!
+    代码格式有问题;
+    ....
+    已经自动调整格式,review代码后再git add . && git commit
+    ....
+    ....
+    \\033[0m"
+    exit 1
+fi
+"""
+    "chmod +x .git/hooks/pre-commit".execute()
+}

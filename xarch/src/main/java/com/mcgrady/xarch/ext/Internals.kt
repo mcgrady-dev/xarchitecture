@@ -45,12 +45,12 @@ object Internals {
 
     // Some constants not present in Android SDK v.15
     private object InternalConfiguration {
-        val SCREENLAYOUT_LAYOUTDIR_MASK = 0xC0
-        val SCREENLAYOUT_LAYOUTDIR_SHIFT = 6
-        val SCREENLAYOUT_LAYOUTDIR_RTL = 0x02 shl SCREENLAYOUT_LAYOUTDIR_SHIFT
+        const val SCREENLAYOUT_LAYOUTDIR_MASK = 0xC0
+        const val SCREENLAYOUT_LAYOUTDIR_SHIFT = 6
+        const val SCREENLAYOUT_LAYOUTDIR_RTL = 0x02 shl SCREENLAYOUT_LAYOUTDIR_SHIFT
 
-        val UI_MODE_TYPE_APPLIANCE = 0x05
-        val UI_MODE_TYPE_WATCH = 0x06
+        const val UI_MODE_TYPE_APPLIANCE = 0x05
+        const val UI_MODE_TYPE_WATCH = 0x06
     }
 
     @JvmStatic
@@ -96,8 +96,7 @@ object Internals {
     @JvmStatic
     private fun fillIntentArguments(intent: Intent, params: Array<out Pair<String, Any?>>) {
         params.forEach {
-            val value = it.second
-            when (value) {
+            when (val value = it.second) {
                 null -> intent.putExtra(it.first, null as Serializable?)
                 is Int -> intent.putExtra(it.first, value)
                 is Long -> intent.putExtra(it.first, value)
@@ -131,22 +130,7 @@ object Internals {
     }
 
     @JvmStatic
-    inline fun <T> useCursor(cursor: Cursor, f: (Cursor) -> T): T {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            // Closeable only added in API 16
-            cursor.use(f)
-        } else {
-            try {
-                f(cursor)
-            } finally {
-                try {
-                    cursor.close()
-                } catch (e: Exception) {
-                    // Do nothing
-                }
-            }
-        }
-    }
+    inline fun <T> useCursor(cursor: Cursor, f: (Cursor) -> T): T = cursor.use(f)
 
     @JvmStatic
     fun <T : View> initiateView(ctx: Context, viewClass: Class<T>): T {

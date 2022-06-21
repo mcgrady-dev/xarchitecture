@@ -35,12 +35,12 @@ inline fun <reified T : ViewBinding> Activity.viewbind() =
     ActivityViewBinding(T::class.java, this)
 
 inline fun <reified T : ViewDataBinding> Activity.databind(@LayoutRes resId: Int) =
-    com.mcgrady.xarch.databind.ActivityDataBinding<T>(this, resId)
+    ActivityDataBinding<T>(this, resId)
 
 inline fun <reified T : ViewDataBinding> Activity.databind(
     @LayoutRes resId: Int,
     noinline block: T.() -> Unit
-) = com.mcgrady.xarch.databind.ActivityDataBinding<T>(this, resId, block)
+) = ActivityDataBinding<T>(this, resId, block)
 
 inline fun <reified T : ViewBinding> Fragment.viewbind() =
     FragmentViewBinding(T::class.java, this)

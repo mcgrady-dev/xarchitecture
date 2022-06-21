@@ -48,11 +48,11 @@ class LifecycleObserver(
     var create: (() -> Unit)? = null
 ) : BindingLifecycleObserver() {
 
-    override fun onCreate(owner: LifecycleOwner) {
+    override fun onCreate(owner: LifecycleOwner?) {
         create?.invoke()
     }
 
-    override fun onDestroy(owner: LifecycleOwner) {
+    override fun onDestroy(owner: LifecycleOwner?) {
         destroyed?.invoke()
         lifecycle?.apply {
             removeObserver(this@LifecycleObserver)

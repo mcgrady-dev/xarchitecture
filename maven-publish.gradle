@@ -2,6 +2,8 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 apply plugin: 'org.jetbrains.dokka'
 
+apply from: '../dependencies.gradle'
+
 Properties localProps = new Properties()
 File localProperties = new File(rootProject.rootDir, "local.properties")
 if (localProperties.exists() && localProperties.isFile()) {
@@ -39,8 +41,6 @@ artifacts {
     archives javadocJar
 }
 
-version = VERSION_NAME
-
 // Because the components are created only during the afterEvaluate phase, you must
 // configure your publications using the afterEvaluate() lifecycle method.
 afterEvaluate {
@@ -50,7 +50,7 @@ afterEvaluate {
             maven(MavenPublication) {
                 groupId GROUP
                 artifactId POM_ARTIFACT_ID
-                version VERSION_NAME
+                version versions.versionName
                 // Applies the component for the release or java build variant.
                 if (project.plugins.findPlugin("com.android.library")) {
                     from components.release
@@ -91,7 +91,7 @@ afterEvaluate {
 
         repositories {
             maven {
-                url = version.endsWith('SNAPSHOT') ? SNAPSHOT_REPOSITORY_URL : RELEASE_REPOSITORY_URL
+                url = versions.versionName.endsWith('SNAPSHOT') ? SNAPSHOT_REPOSITORY_URL : RELEASE_REPOSITORY_URL
                 credentials {
                     username = localProps.getProperty("mavenCentralUsername")
                     password = localProps.getProperty("mavenCentralPassword")

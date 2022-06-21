@@ -139,17 +139,17 @@ inline fun Intent.singleTop(): Intent = apply { addFlags(Intent.FLAG_ACTIVITY_SI
 inline fun Fragment.browse(url: String, newTask: Boolean = false) = activity?.browse(url, newTask)
 
 fun Context.browse(url: String, newTask: Boolean = false): Boolean {
-    try {
+    return try {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(url)
         if (newTask) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         startActivity(intent)
-        return true
+        true
     } catch (e: ActivityNotFoundException) {
         e.printStackTrace()
-        return false
+        false
     }
 }
 

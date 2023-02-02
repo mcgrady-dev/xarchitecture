@@ -23,7 +23,7 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.BindingLifecycleObserver
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -46,13 +46,13 @@ class LifecycleObserver(
     var lifecycle: Lifecycle?,
     var destroyed: (() -> Unit)? = null,
     var create: (() -> Unit)? = null
-) : BindingLifecycleObserver() {
+) : DefaultLifecycleObserver {
 
-    override fun onCreate(owner: LifecycleOwner?) {
+    override fun onCreate(owner: LifecycleOwner) {
         create?.invoke()
     }
 
-    override fun onDestroy(owner: LifecycleOwner?) {
+    override fun onDestroy(owner: LifecycleOwner) {
         destroyed?.invoke()
         lifecycle?.apply {
             removeObserver(this@LifecycleObserver)

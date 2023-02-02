@@ -15,9 +15,14 @@
  */
 package com.mcgrady.xarchitecturedemo
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.mcgrady.xarch.ext.toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +30,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        toast("dasdf")
     }
 }

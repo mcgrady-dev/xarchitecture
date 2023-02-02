@@ -28,10 +28,11 @@ spotless {
 
     kotlin {
         target "**/*.kt"
-        ktlint("0.45.2")
-                .userData([
-                        'disabled_rules': 'no-wildcard-imports'
-                ])
+//        ktlint("0.46.0")
+//                .userData([
+//                        'disabled_rules': 'no-wildcard-imports'
+//                ])
+        ktlint()
         licenseHeaderFile "$rootDir/license.kt"
         trimTrailingWhitespace()
         indentWithSpaces(4)
@@ -42,36 +43,37 @@ spotless {
 task spotlessPreCommitHook() {
     def gitHooksDirectory = new File("$project.rootDir/.git/hooks/")
     if (!gitHooksDirectory.exists()) gitHooksDirectory.mkdirs()
-    new File("$project.rootDir/.git/hooks", "pre-commit").text = """
-#!/bin/bash
-echo "Running spotless apply"
-set -e
-  ./gradlew -PdisableSpotlessCheck spotlessApply
-result=\$?
-printf "The spotless apply result code is \$result"
-if [[ "\$result" = 0 ]] ; then
-    echo "\\033[32m
-    ....
-    ....
-    SpotlessApply Pass!!
-    ....
-    ....
-    \\033[0m"
-    exit 0
-else
-    ./gradlew format
-    echo "\\033[31m
-    ....
-    ....
-    SpotlessApply Failed!!
-    代码格式有问题;
-    ....
-    已经自动调整格式,review代码后再git add . && git commit
-    ....
-    ....
-    \\033[0m"
-    exit 1
-fi
-"""
+        new File("$project.rootDir/.git/hooks", "pre-commit").text =
+            """
+            #!/bin/bash
+            echo "Running spotless apply"
+            set -e
+              ./gradlew -PdisableSpotlessCheck spotlessApply
+            result=\$?
+            printf "The spotless apply result code is \$result"
+            if [[ "\$result" = 0 ]] ; then
+                echo "\\033[32m
+                ....
+                ....
+                SpotlessApply Pass!!
+                ....
+                ....
+                \\033[0m"
+                exit 0
+            else
+                ./gradlew format
+                echo "\\033[31m
+                ....
+                ....
+                SpotlessApply Failed!!
+                代码格式有问题;
+                ....
+                已经自动调整格式,review代码后再git add . && git commit
+                ....
+                ....
+                \\033[0m"
+                exit 1
+            fi
+            """
     "chmod +x .git/hooks/pre-commit".execute()
 }

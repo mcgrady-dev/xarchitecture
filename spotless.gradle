@@ -15,8 +15,6 @@ spotless {
     }
 
     java {
-        target '**/*.java'
-
         importOrder()
         removeUnusedImports()
         googleJavaFormat('1.8').aosp().reflowLongStrings()
@@ -27,12 +25,7 @@ spotless {
     }
 
     kotlin {
-        target "**/*.kt"
-//        ktlint("0.46.0")
-//                .userData([
-//                        'disabled_rules': 'no-wildcard-imports'
-//                ])
-        ktlint()
+        ktlint("0.48.2")
         licenseHeaderFile "$rootDir/license.kt"
         trimTrailingWhitespace()
         indentWithSpaces(4)

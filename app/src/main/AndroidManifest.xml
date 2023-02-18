@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Xarchitecture">
         <activity
-            android:name="com.mcgrady.xarchitecturedemo.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

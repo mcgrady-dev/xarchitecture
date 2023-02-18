@@ -15,12 +15,13 @@
  */
 package com.mcgrady.xarch.base
 
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 
 /**
  * Created by mcgrady on 2021/5/13.
  */
-abstract class LazyFragment : Fragment() {
+abstract class LazyFragment(@LayoutRes protected open val contentLayoutId: Int = -1) : Fragment(contentLayoutId) {
 
     private var isLoaded = false
 

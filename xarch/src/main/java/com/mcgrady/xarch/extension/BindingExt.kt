@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.activity.ComponentActivity
+import androidx.annotation.LayoutRes
+import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -74,6 +76,18 @@ fun <VB : ViewBinding> ViewGroup.viewBinding(
     attachToParent: Boolean = false
 ) = lazy(LazyThreadSafetyMode.NONE) {
     inflate(LayoutInflater.from(context), if (attachToParent) this else null, attachToParent)
+}
+
+fun <T : ViewDataBinding> ViewGroup.dataBinding(
+    @LayoutRes layoutRes: Int,
+    attachToParent: Boolean = false
+): T {
+    return DataBindingUtil.inflate(
+        LayoutInflater.from(context),
+        layoutRes,
+        this,
+        attachToParent
+    )
 }
 
 fun <VB : ViewBinding> RecyclerView.ViewHolder.withBinding(bind: (View) -> VB, block: VB.(RecyclerView.ViewHolder) -> Unit) = apply {
